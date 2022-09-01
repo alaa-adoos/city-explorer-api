@@ -32,6 +32,7 @@ async function weatherhandler(req,res){
 let URL=`https://api.weatherbit.io/v2.0/forecast/daily?city=${cityName}&lat=${lat}&lon=${lon}&key=${process.env.WEATHER_API_KEY}`
 try{
 const result=await axios.get(URL);
+console.log(result);
 const weatherArr=result.data.data.map(item=>new Forcast(item) );
 
 
