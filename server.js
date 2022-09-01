@@ -3,7 +3,7 @@ require('dotenv').config();
 const express = require('express'); 
 const cors = require('cors');
 const server = express();
-
+const axios =require('axios');
 const weatherData = require('./data/weather.json')
 
 
@@ -18,28 +18,47 @@ server.get('/',(req,res)=>{
     res.send("Hi from the home route");
 })
 
-//http://localhost:3000/weather?Latitude=47.6038321&Longitude=-122.3300624&searchQuery=Seattle
-server.get('/weather',(req,res)=>{
+//http://localhost:3002/weather?Latitude=47.6038321&Longitude=-122.3300624&searchQuery=Seattle
+//https://api.weatherbit.io/v2.0/forecast/daily?city=Raleigh&lat=38.123&lon=-78.543&key=17f82c142e954410b8b0080bd85147ca
+//
+
+
+server.get('/weather',weatherhandler)
+
+async function weatherhandler(req,res){
     let lat=req.query.Latitude;
     let lon=req.query.Longitude;
     let cityName=req.query.searchQuery;
-
-    console.log(lat,lon)
-let city=weatherData.find((item)=>{
-    if(item.lat == lat && item.lon == lon && item.city_name.toLowerCase()==cityName.toLowerCase()){
-        return item;
-    }
-    
-})
+let URL=`https://api.weatherbit.io/v2.0/forecast/daily?city=${cityName}&lat=${lat}&lon=${lon}&key=${process.env.WEATHER_API_KEY}`
 try{
-const weatherArr=city.data.map(item => new Forcast (item));
+const result=await axios.get(URL);
+const weatherArr=result.data.data.map(item=>new Forcast(item) );
+
+
 res.send(weatherArr);
+
 }
 catch{
-    console.log("error");
+    //
 }
-    })
-    
+}
+//http://localhost:3002/movies?city=cityName
+//https://api.themoviedb.org/3/search/movie?api_key=cf59d527d7806380cd7a430442e8abd5&query=AMMAN
+server.get('/movies',movieshandler)
+
+async function movieshandler(req,res){
+let cityName=req.query.city;
+let URL=`https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}&query=${cityName}`;
+try{
+let result=await axios.get(URL);
+const movieArr=result.data.results.map(item=>new Movies(item));
+res.send(movieArr);
+} 
+catch{
+    console.log("err");
+}
+}
+
 
 server.get('*',(req,res)=>{
     res.send("404");
@@ -57,4 +76,15 @@ class Forcast{
         this.date = item.valid_date;
     }
 
+}
+class Movies{
+    constructor(item){
+        this.title=item.title;
+this.overview=item.overview;
+this.average_votes=item.vote_average;
+this.total_votes=item.vote_count;
+this.image_url=item.poster_path;
+this.popularity=item.popularity;
+this.released_on=item.release_date;
+    }
 }
