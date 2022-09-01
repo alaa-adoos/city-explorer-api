@@ -15,7 +15,7 @@ const PORT = process.env.PORT
 
 //http:localhost:PORT/
 server.get('/',(req,res)=>{
-    res.send("Hi from the home route");
+    res.send("Hi from the home- route");
 })
 
 //http://localhost:3002/weather?Latitude=47.6038321&Longitude=-122.3300624&searchQuery=Seattle
