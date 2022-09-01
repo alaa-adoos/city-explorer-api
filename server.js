@@ -9,13 +9,13 @@ const weatherData = require('./data/weather.json')
 
 server.use(cors());
 
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 3002
 
 //const Forcast = require("./Forcast");
 
 //http:localhost:PORT/
 server.get('/',(req,res)=>{
-    res.send("Hi from the home- route");
+    res.send("Hi from the home- routes");
 })
 
 //http://localhost:3002/weather?Latitude=47.6038321&Longitude=-122.3300624&searchQuery=Seattle
@@ -32,6 +32,7 @@ async function weatherhandler(req,res){
 let URL=`https://api.weatherbit.io/v2.0/forecast/daily?city=${cityName}&lat=${lat}&lon=${lon}&key=${process.env.WEATHER_API_KEY}`
 try{
 const result=await axios.get(URL);
+console.log(result);
 const weatherArr=result.data.data.map(item=>new Forcast(item) );
 
 
