@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/alaa-adoos/city-explorer-api#readme",
   "dependencies": {
+    "axios": "^0.27.2",
     "cors": "^2.8.5",
     "cros": "^1.0.1",
     "dotenv": "^16.0.1",
