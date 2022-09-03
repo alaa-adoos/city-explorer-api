@@ -52,6 +52,7 @@ let cityName=req.query.city;
 let URL=`https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}&query=${cityName}`;
 try{
 let result=await axios.get(URL);
+console.log(result.data)
 const movieArr=result.data.results.map(item=>new Movies(item));
 res.send(movieArr);
 } 
@@ -63,10 +64,6 @@ catch{
 
 server.get('*',(req,res)=>{
     res.send("404");
-})
-
-server.listen(PORT, () => {
-    console.log(`Hello, I am listening in ${PORT}`);
 })
 
 class Forcast{
@@ -89,3 +86,6 @@ this.popularity=item.popularity;
 this.released_on=item.release_date;
     }
 }
+server.listen(PORT, () => {
+    console.log(`Hello, I am listening in ${PORT}`);
+})
